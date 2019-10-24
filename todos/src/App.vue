@@ -1,10 +1,6 @@
 <template>
   <section class="todoapp">
-    <header class="header">
-      <h1>todos</h1>
-      <input class="new-todo" autofocus autocomplete="off" placeholder="What needs to be done?"
-             v-model="newTodo" @keyup.enter="addTodo">
-    </header>
+    <TodoInput :add-todo="addTodo"/>
     <section class="main" v-show="todos.length" v-cloak>
       <input id="toggle-all" class="toggle-all" type="checkbox" v-model="allDone">
       <label for="toggle-all"></label>
@@ -50,9 +46,13 @@
 </template>
 <script>
 import todoStorage from './helpers/storage'
+import TodoInput from './components/TodoInput'
 
 // app Vue instance
 export default {
+  components: {
+    TodoInput
+  },
   // visibility filters
   filters: {
     all: function (todos) {
@@ -86,7 +86,6 @@ export default {
   data () {
     return {
       todos: todoStorage.fetch(),
-      newTodo: '',
       editedTodo: null,
       visibility: 'all'
     }
@@ -95,7 +94,7 @@ export default {
   watch: {
     todos: {
       deep: true,
-      handler: function (todos) {
+      handler (todos) {
         todoStorage.save(todos)
       }
     },
@@ -126,8 +125,8 @@ export default {
   // methods that implement data logic.
   // note there's no DOM manipulation here at all.
   methods: {
-    addTodo: function () {
-      const value = this.newTodo && this.newTodo.trim()
+    addTodo: function (newTodo) {
+      const value = newTodo && newTodo.trim()
       if (!value) {
         return
       }
@@ -136,7 +135,6 @@ export default {
         title: value,
         completed: false
       })
-      this.newTodo = ''
     },
     removeTodo: function (todo) {
       this.todos.splice(this.todos.indexOf(todo), 1)
@@ -165,5 +163,3 @@ export default {
   }
 }
 </script>
-<style>
-</style>
