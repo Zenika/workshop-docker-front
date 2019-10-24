@@ -23,17 +23,23 @@
     </span>
       <ul class="filters">
         <li>
-          <router-link to="/all" :class="{ selected: visibility == 'all' }">
+          <router-link to="/all"
+                       :class="{ selected: visibility === VISIBILITY.ALL }"
+          >
             All
           </router-link>
         </li>
         <li>
-          <router-link to="/active" :class="{ selected: visibility == 'active' }">
+          <router-link to="/active"
+                       :class="{ selected: visibility === VISIBILITY.ACTIVE }"
+          >
             Active
           </router-link>
         </li>
         <li>
-          <router-link to="/completed" :class="{ selected: visibility == 'completed' }">
+          <router-link to="/completed"
+                       :class="{ selected: visibility === VISIBILITY.COMPLETED }"
+          >
             Completed
           </router-link>
         </li>
@@ -47,6 +53,7 @@
 <script>
 import todoStorage from './helpers/storage'
 import TodoInput from './components/TodoInput'
+import { VISIBILITY } from './enums/visibility'
 
 // app Vue instance
 export default {
@@ -87,7 +94,8 @@ export default {
     return {
       todos: todoStorage.fetch(),
       editedTodo: null,
-      visibility: 'all'
+      VISIBILITY,
+      visibility: VISIBILITY.ALL
     }
   },
   // watch todos change for localStorage persistence
