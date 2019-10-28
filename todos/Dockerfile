@@ -1,31 +1,33 @@
-#FAIRE ATTENTION A L'image de depart
+# FAIRE ATTENTION A L'image de depart
 # UTILSER LE CACHE DOCKER ET L'optimiser
 # MONTER LE CODE pour tester en live
 # ALLEGER L'image de run (lib / outils)
 
-From node:10
+FROM node:10
 
 WORKDIR /usr/src/app
 
-ADD babel.config.js .
-ADD package.json . 
-ADD package-lock.json . 
-ADD yarn.lock	.
+COPY babel.config.js .
+COPY package.json .
+COPY yarn.lock .
 
-#COPY DEPENDENCIES 
-RUN yarn install
+# COPY DEPENDENCIES
+RUN yarn
 
 # Compiles and hot-reloads for development
-ADD public .
-ADD src	.
-RUN yarn run serve
-
-# Compiles and minifies for production
-RUN yarn run build
-
-# Run your tests
-RUN yarn run test
+COPY public ./public
+COPY src ./src
 
 # Lints and fixes files
-RUN yarn run lint
+RUN yarn lint
 
+# Run your tests
+# RUN yarn test
+
+# Compiles and minifies for production
+RUN yarn build
+
+EXPOSE 8080
+
+ENTRYPOINT ["yarn"]
+CMD ["serve"]
