@@ -1,8 +1,6 @@
-# FAIRE ATTENTION A L'image de depart
-# UTILSER LE CACHE DOCKER ET L'optimiser
-# MONTER LE CODE pour tester en live
-# ALLEGER L'image de run (lib / outils)
-
+# +++++++++++++++++++++++++++++++++++++++++++++++
+# Image for COMPILATION AND TESTS  
+# +++++++++++++++++++++++++++++++++++++++++++++++
 FROM node:10.15.0-alpine as builder
 
 WORKDIR /usr/src/app
@@ -26,6 +24,14 @@ RUN yarn lint
 
 # Compiles and minifies for production
 RUN yarn build
+
+# +++++++++++++++++++++++++++++++++++++++++++++++
+# Image for RUNTIME 
+# +++++++++++++++++++++++++++++++++++++++++++++++
+#
+# Volume inherited from nginx image
+# VOLUME /usr/share/nginx/html
+# VOLUME /etc/nginx
 
 FROM nginx:1.12.1-alpine
 
