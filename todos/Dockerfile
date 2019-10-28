@@ -3,7 +3,7 @@
 # MONTER LE CODE pour tester en live
 # ALLEGER L'image de run (lib / outils)
 
-FROM node:10
+FROM node:10.15.0-alpine as builder
 
 WORKDIR /usr/src/app
 
@@ -15,7 +15,7 @@ COPY yarn.lock .
 RUN yarn
 
 # Compiles and hot-reloads for development
-COPY public ./public
+COPY public ./public/
 COPY src ./src
 
 # Lints and fixes files
@@ -27,7 +27,8 @@ RUN yarn lint
 # Compiles and minifies for production
 RUN yarn build
 
-EXPOSE 8080
+FROM nginx:1.12.1-alpine
 
-ENTRYPOINT ["yarn"]
-CMD ["serve"]
+EXPOSE 80
+
+COPY --from=builder /usr/src/app/dist/ /usr/share/nginx/html/
