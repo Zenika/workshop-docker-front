@@ -1,13 +1,11 @@
 # +++++++++++++++++++++++++++++++++++++++++++++++
 # Image for COMPILATION AND TESTS  
 # +++++++++++++++++++++++++++++++++++++++++++++++
-FROM node:10.15.0-alpine as builder
 
+FROM node:10.15.0-alpine as builder
 WORKDIR /usr/src/app
 
-COPY babel.config.js .
-COPY package.json .
-COPY yarn.lock .
+COPY "babel.config.js"  "package.json"  "yarn.lock" ./
 
 # COPY DEPENDENCIES
 RUN yarn
@@ -36,5 +34,8 @@ RUN yarn build
 FROM nginx:1.12.1-alpine
 
 EXPOSE 80
+
+HEALTHCHECK --interval=5m --timeout=3s \
+  CMD curl -f http://localhost/ || exit 1
 
 COPY --from=builder /usr/src/app/dist/ /usr/share/nginx/html/
